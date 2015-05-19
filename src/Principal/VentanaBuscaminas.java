@@ -91,7 +91,7 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
         cuentaMinas();
     }
         //se termina el juego
-        private void finDePartida() {
+        private void terminaPartida() {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 Boton boton = arrayBotones[i] [j];
@@ -119,10 +119,12 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
         else{
             //si es una bomba explota y se acaba la partida
             if (miBoton.bomba == 1) {
-                finDePartida();
-
+                terminaPartida();
+                
                 gameOver=true;
-            }
+            }else{
+                if (miBoton.numeroMinasAlrededor>0)
+                miBoton.setText(miBoton.numeroMinasAlrededor+"");
             //declaro un arraylist para ir guardando la lista de botones
             //que tengo que verificar
             ArrayList <Boton> listaDeCasillasAMirar = new ArrayList();
@@ -151,6 +153,7 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
                 listaDeCasillasAMirar.remove(b);
             }
             
+            }
            
         }
         
