@@ -19,6 +19,7 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
     int filas = 20;
     int columnas = 30;
     int numMinas = 59;
+    boolean gameOver = false;
     
     Boton [][] arrayBotones = new Boton[filas][columnas];
 
@@ -28,7 +29,7 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
        int c = r.nextInt(columnas);
        
        arrayBotones[f][c].bomba = 1;
-       arrayBotones[f][c].setText("B");
+
     }
     
     //cuentaminas realiza un paso previo que consiste en contar para cada celda
@@ -49,9 +50,8 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
                 }
                 arrayBotones[i][j].numeroMinasAlrededor = minas;
                 minas = 0;
-                if ((arrayBotones[i][j].numeroMinasAlrededor > 0) &&
-                    (arrayBotones[i][j].bomba == 0)){
-                    arrayBotones[i][j].setText(String.valueOf(arrayBotones[i][j].numeroMinasAlrededor));
+                if ((arrayBotones[i][j].numeroMinasAlrededor > 0) && (arrayBotones[i][j].bomba == 0)){
+                    arrayBotones[i][j].setText("");
                 }
             }
         }
@@ -90,16 +90,39 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
         }
         cuentaMinas();
     }
+        //se termina el juego
+        private void finDePartida() {
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                Boton boton = arrayBotones[i] [j];
+                if (boton.bomba == 1) {
+                    boton.setText("B");
+                    boton.setEnabled(false);
+                } else {
+                    if(boton.numeroMinasAlrededor>0)
+                    boton.setText(boton.numeroMinasAlrededor + "");
+
+                }
+            }
+        }
+
+    }
 
     //este método es llamado cada vez que hacemos clic en un botón
     private void botonPulsado(MouseEvent e){
+        if(!gameOver){
         Boton miBoton = (Boton) e.getComponent();
         if(e.getButton() == MouseEvent.BUTTON3){
             miBoton.setText("?");
         }
+
         else{
-            //si es una bomba --> explota y se acaba la partida
-            
+            //si es una bomba explota y se acaba la partida
+            if (miBoton.bomba == 1) {
+                finDePartida();
+
+                gameOver=true;
+            }
             //declaro un arraylist para ir guardando la lista de botones
             //que tengo que verificar
             ArrayList <Boton> listaDeCasillasAMirar = new ArrayList();
@@ -127,12 +150,12 @@ public class VentanaBuscaminas extends javax.swing.JFrame {
                 }
                 listaDeCasillasAMirar.remove(b);
             }
-            //si no, verificamos la casilla 
-            miBoton.setText("0");
+            
+           
         }
         
     }
-    
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
